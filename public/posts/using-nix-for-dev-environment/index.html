@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>How to use Nix to make reproducible dev environments | just some developer thoughts</title>
+<meta name="keywords" content="">
+<meta name="description" content="Perhaps just like me you see value in making easily reproducible dev environments. Wouldn&rsquo;t it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necesarry for contributing?
+Well, I think it&rsquo;s something that everone should take into consideration. Reproducible dev environments have one more pro - there&rsquo;re self-documenting state of your project. You can look into things your dev env provides you to know which programming languages and tools the project is using.">
+<meta name="author" content="">
+<link rel="canonical" href="https://nxy7.github.io/personal_blog/posts/using-nix-for-dev-environment/">
+<link crossorigin="anonymous" href="/personal_blog/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/personal_blog/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://nxy7.github.io/personal_blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nxy7.github.io/personal_blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nxy7.github.io/personal_blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nxy7.github.io/personal_blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nxy7.github.io/personal_blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D4BXHY930J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-D4BXHY930J', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="How to use Nix to make reproducible dev environments" />
+<meta property="og:description" content="Perhaps just like me you see value in making easily reproducible dev environments. Wouldn&rsquo;t it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necesarry for contributing?
+Well, I think it&rsquo;s something that everone should take into consideration. Reproducible dev environments have one more pro - there&rsquo;re self-documenting state of your project. You can look into things your dev env provides you to know which programming languages and tools the project is using." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://nxy7.github.io/personal_blog/posts/using-nix-for-dev-environment/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-03-17T09:03:20-08:00" />
+<meta property="article:modified_time" content="2023-03-17T09:03:20-08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="How to use Nix to make reproducible dev environments"/>
+<meta name="twitter:description" content="Perhaps just like me you see value in making easily reproducible dev environments. Wouldn&rsquo;t it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necesarry for contributing?
+Well, I think it&rsquo;s something that everone should take into consideration. Reproducible dev environments have one more pro - there&rsquo;re self-documenting state of your project. You can look into things your dev env provides you to know which programming languages and tools the project is using."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Posts",
+      "item": "https://nxy7.github.io/personal_blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "How to use Nix to make reproducible dev environments",
+      "item": "https://nxy7.github.io/personal_blog/posts/using-nix-for-dev-environment/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to use Nix to make reproducible dev environments",
+  "name": "How to use Nix to make reproducible dev environments",
+  "description": "Perhaps just like me you see value in making easily reproducible dev environments. Wouldn\u0026rsquo;t it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necesarry for contributing?\nWell, I think it\u0026rsquo;s something that everone should take into consideration. Reproducible dev environments have one more pro - there\u0026rsquo;re self-documenting state of your project. You can look into things your dev env provides you to know which programming languages and tools the project is using.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Perhaps just like me you see value in making easily reproducible dev environments. Wouldn’t it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necesarry for contributing?\nWell, I think it’s something that everone should take into consideration. Reproducible dev environments have one more pro - there’re self-documenting state of your project. You can look into things your dev env provides you to know which programming languages and tools the project is using.\nLeading dev environment solutions I’ve personally tried 2 tools that are trying to achieve easily reproducible environments: Nix and DevContainers. Both come with some additional complexity when setting up and both are great tools. I prefer Nix over DevContainers as not every IDE supports DevContainers. Imao the biggest things that DevContainers have going for them are their integrations with VsCode and online Dev Environments. If you specify .devcontainer.json file at the root of your project you could use something like github codespaces to load the project in browser version of vscode, with the project running on github server. It can be significantly faster than working locally if you’re coding using cheaper laptop. Using Nix inside DevContainer also is a possibility - you would use Nix to produce coding environment and DevContainer to provide Nix, but that’s out of the scope of this post.\nGetting started with Nix Installation First things first - you have to install Nix on your system. I’ve personally tried it on Ubuntu (WSL2), Manjaro and Arch systems but Nix is supposed to work with MacOS too. Everything You need is on nix page, just remember to use ‘single-user installation’ instructions if you’re running wsl2. After running a single script You’re done. Well that was easy ^_^\nEnabling flakes Nix has experimental feature that is pretty much the direction of the project - flakes. Flakes allow for declarative configuration of project dependencies and building process while being easily shareable. They integrate nicely with commonly used VCS - git. Nix has some baggage coming with it, that might be confusing for newcomers (there are multiple ways to achieve the same thing) but if you have option to use flakes I’d highly recommend it. To enable flake support add experimental-features = nix-command flakes to /etc/nix/nix.conf (multi user installation) or ~/.config/nix/nix.conf (single user installation).\nExplaining Nix flake structure Open any project you’re developing and run nix flake init. It should produce the following flake.nix file\n{ description = \"A very basic flake\"; outputs = { self, nixpkgs }: { packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello; packages.x86_64-linux.default = self.packages.x86_64-linux.hello; }; } Default flake produced by nix flake init doesn’t provide any developer shells and instead specifies packages that the project can build. In this case it’s ‘hello’ package from nixpkgs (the biggest repository for nix packages). You can try it out by either running nix run . (which will build and run hello package) or by running nix build . (that will only build hello binary and add ‘result’ symlink in your project with binary in result/bin/ folder).\nRemember - flakes are declarative configuration of your project, so you need to know what options does flake.nix provide. As you can see at root level there’s description and outputs properties. Description is pretty self explanatory, outputs on the other hand specify things your flake can do for you. Our current flake has output that takes 2 arguments self and nixpkgs and provides 2 outputs packages.x86_64-linux.hello and packages.x86_64-linux.default. When we’re running nix run . we’re telling nix: “can you build and run default package for me?”. You could also run specific output like nix run .#hello.\nNow few words about arguments we provide to nix outputs. I’m not here to teach you about Nix language and you’d be better off using official resources for that, but I’ll try explaining structure of it. outputs field is in reality a nix function that takes some arguments and returns structured object (like JSON). Some fields in returned object are special and have meaning to other nix commands. nix run and nix build are looking for ‘packages.{system}.{outputName}’ propety of outputs. Default flake has just 2 dependencies: “self” and “nixpkgs”. Those 2 are special and provided to you by default. You could also provide inputs field at the root of flake file like:\n{ description = \"A very basic flake\"; inputs = { nixpkgs.url = \"github:NixOS/nixpkgs/nixpkgs-unstable\"; flakeUtils.url = \"github:numtide/flake-utils\"; }; outputs = { self, nixpkgs, flakeUtils }: { packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello; packages.x86_64-linux.default = self.packages.x86_64-linux.hello; }; } we’ve provided 2 inputs for our flake here, one overrides nixpkgs, the other provides some useful Nix functions that we can use in our own flake. What those are really doing is just importing flake.nix files from other repositories, you can imagine how powerful is that concept. Let’s modify flake.nix file so it can provide developer shell for us.\n{ description = \"A very basic flake\"; inputs = { nixpkgs.url = \"github:NixOS/nixpkgs/nixpkgs-unstable\"; flakeUtils.url = \"github:numtide/flake-utils\"; }; outputs = { self, nixpkgs, flakeUtils }: let pkgs = nixpkgs.legacyPackages.x86_64-linux.pkgs; in { packages.x86_64-linux.hello = pkgs.hello; packages.x86_64-linux.default = pkgs.hello; devShells.x86_64-linux.default = pkgs.mkShell { packages = with pkgs; [ hello nodejs-slim]; }; }; } As you can see, we’ve added pkgs variable that is just deeper field in nixpkgs flake. Additionally we’ve created new output: devShells.x86_64-linux.default that uses mkShell function provided by our newly created pkgs variable (we could use whole path here directly, but making pkgs variable makes it more readable and is pretty common practise). mkShell function takes object that can take have multiple fields but we’re using just ‘packages’ here. That’s the place we specify our dependencies. You can find almost any open source software you might need at nix search page. Are you using nodejs in your project? Type nodejs in search fields and check what packages does nixpkgs provide. You can then just copy the package name like nodejs-slim (if you want nodejs with less dependencies) into your project devshell like\ndevShells.x86_64-linux.default = pkgs.mkShell { packages = with pkgs; [ hello nodejs-slim]; }; Now run nix develop . (“nix can you run default devshell for me”) and try hello and nodejs commands. Versions of software provided to you are pinned in flake.lock file so if someone copies your project he’ll get the same hello and nodejs version.\nI think nix is great piece of technology. Sure it comes with another lanugage you need to understand and has steep learning curve, but in the beggining even just using simple flakes like the one I’ve shown here is very useful and can greatly improve your productivity and developer experience. I hope you found this post useful. Have fun using nix and have a great day :-)\n",
+  "wordCount" : "1119",
+  "inLanguage": "en",
+  "datePublished": "2023-03-17T09:03:20-08:00",
+  "dateModified": "2023-03-17T09:03:20-08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://nxy7.github.io/personal_blog/posts/using-nix-for-dev-environment/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "just some developer thoughts",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nxy7.github.io/personal_blog/favicon.ico"
+    }
+  }
+}
+</script>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D4BXHY930J"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-D4BXHY930J', { 'anonymize_ip': false });
+}
+</script>
+
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://nxy7.github.io/personal_blog" accesskey="h" title="just some developer thoughts (Alt + H)">just some developer thoughts</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      How to use Nix to make reproducible dev environments
+    </h1>
+    <div class="post-meta"><span title='2023-03-17 09:03:20 -0800 -0800'>March 17, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>Perhaps just like me you see value in making easily reproducible dev environments. Wouldn&rsquo;t it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necesarry for contributing?</p>
+<p>Well, I think it&rsquo;s something that everone should take into consideration. Reproducible dev environments have one more pro - there&rsquo;re self-documenting state of your project. You can look into things your dev env provides you to know which programming languages and tools the project is using.</p>
+<h1 id="leading-dev-environment-solutions">Leading dev environment solutions<a hidden class="anchor" aria-hidden="true" href="#leading-dev-environment-solutions">#</a></h1>
+<p>I&rsquo;ve personally tried 2 tools that are trying to achieve easily reproducible environments: <em>Nix</em> and <em>DevContainers</em>. Both come with some additional complexity when setting up and both are great tools. I prefer Nix over DevContainers as not every IDE supports DevContainers. Imao the biggest things that DevContainers have going for them are their integrations with VsCode and online Dev Environments. If you specify <em>.devcontainer.json</em> file at the root of your project you could use something like github codespaces to load the project in browser version of vscode, with the project running on github server. It can be significantly faster than working locally if you&rsquo;re coding using cheaper laptop. Using Nix inside DevContainer also is a possibility - you would use Nix to produce coding environment and DevContainer to provide Nix, but that&rsquo;s out of the scope of this post.</p>
+<h1 id="getting-started-with-nix">Getting started with Nix<a hidden class="anchor" aria-hidden="true" href="#getting-started-with-nix">#</a></h1>
+<h2 id="installation">Installation<a hidden class="anchor" aria-hidden="true" href="#installation">#</a></h2>
+<p>First things first - you have to install Nix on your system. I&rsquo;ve personally tried it on Ubuntu (WSL2), Manjaro and Arch systems but Nix is supposed to work with MacOS too. Everything You need is on <a href="https://nixos.org/download.html#download-nix">nix page</a>, just remember to use &lsquo;single-user installation&rsquo; instructions if you&rsquo;re running wsl2. After running a single script You&rsquo;re done. Well that was easy ^_^</p>
+<h2 id="enabling-flakes">Enabling flakes<a hidden class="anchor" aria-hidden="true" href="#enabling-flakes">#</a></h2>
+<p>Nix has experimental feature that is pretty much the direction of the project - flakes. Flakes allow for declarative configuration of project dependencies and building process while being easily shareable. They integrate nicely with commonly used VCS - git. Nix has some baggage coming with it, that might be confusing for newcomers (there are multiple ways to achieve the same thing) but if you have option to use flakes I&rsquo;d highly recommend it. To enable flake support add <code>experimental-features = nix-command flakes</code> to <em>/etc/nix/nix.conf</em> (multi user installation) or <em>~/.config/nix/nix.conf</em> (single user installation).</p>
+<h2 id="explaining-nix-flake-structure">Explaining Nix flake structure<a hidden class="anchor" aria-hidden="true" href="#explaining-nix-flake-structure">#</a></h2>
+<p>Open any project you&rsquo;re developing and run <code>nix flake init</code>. It should produce the following flake.nix file</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nix" data-lang="nix"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  description <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;A very basic flake&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  outputs <span style="color:#f92672">=</span> { self<span style="color:#f92672">,</span> nixpkgs }: {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    packages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>hello <span style="color:#f92672">=</span> nixpkgs<span style="color:#f92672">.</span>legacyPackages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>hello;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    packages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>default <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>packages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>hello;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Default flake produced by <code>nix flake init</code> doesn&rsquo;t provide any developer shells and instead specifies packages that the project can build. In this case it&rsquo;s &lsquo;hello&rsquo; package from nixpkgs (the biggest repository for nix packages). You can try it out by either running <code>nix run .</code> (which will build and run <code>hello</code> package) or by running <code>nix build .</code> (that will only build hello binary and add &lsquo;result&rsquo; symlink in your project with binary in <code>result/bin/</code> folder).</p>
+<p>Remember - flakes are declarative configuration of your project, so you need to know what options does flake.nix provide. As you can see at root level there&rsquo;s <code>description</code> and <code>outputs</code> properties. Description is pretty self explanatory, outputs on the other hand specify things your flake can do for you. Our current flake has output that takes 2 arguments <code>self</code> and <code>nixpkgs</code> and provides 2 outputs <code>packages.x86_64-linux.hello</code> and <code>packages.x86_64-linux.default</code>. When we&rsquo;re running <code>nix run .</code> we&rsquo;re telling nix: &ldquo;can you build and run default package for me?&rdquo;. You could also run specific output like <code>nix run .#hello</code>.</p>
+<p>Now few words about arguments we provide to nix <code>outputs</code>. I&rsquo;m not here to teach you about Nix language and you&rsquo;d be better off using official resources for that, but I&rsquo;ll try explaining structure of it. <code>outputs</code> field is in reality a nix function that takes some arguments and returns structured object (like JSON). Some fields in returned object are <em>special</em> and have meaning to other nix commands. <code>nix run</code> and <code>nix build</code> are looking for &lsquo;packages.{system}.{outputName}&rsquo; propety of <code>outputs</code>. Default flake has just 2 dependencies: &ldquo;self&rdquo; and &ldquo;nixpkgs&rdquo;. Those 2 are special and provided to you by default. You could also provide <code>inputs</code> field at the root of flake file like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nix" data-lang="nix"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  description <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;A very basic flake&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  inputs <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    nixpkgs<span style="color:#f92672">.</span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;github:NixOS/nixpkgs/nixpkgs-unstable&#34;</span>;
+</span></span><span style="display:flex;"><span>    flakeUtils<span style="color:#f92672">.</span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;github:numtide/flake-utils&#34;</span>;
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  outputs <span style="color:#f92672">=</span> { self<span style="color:#f92672">,</span> nixpkgs<span style="color:#f92672">,</span> flakeUtils }: {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    packages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>hello <span style="color:#f92672">=</span> nixpkgs<span style="color:#f92672">.</span>legacyPackages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>hello;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    packages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>default <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>packages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>hello;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>we&rsquo;ve provided 2 inputs for our flake here, one overrides nixpkgs, the other provides some useful Nix functions that we can use in our own flake. What those are really doing is just importing <code>flake.nix</code> files from other repositories, you can imagine how powerful is that concept. Let&rsquo;s modify flake.nix file so it can provide developer shell for us.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nix" data-lang="nix"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  description <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;A very basic flake&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  inputs <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    nixpkgs<span style="color:#f92672">.</span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;github:NixOS/nixpkgs/nixpkgs-unstable&#34;</span>;
+</span></span><span style="display:flex;"><span>    flakeUtils<span style="color:#f92672">.</span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;github:numtide/flake-utils&#34;</span>;
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  outputs <span style="color:#f92672">=</span> { self<span style="color:#f92672">,</span> nixpkgs<span style="color:#f92672">,</span> flakeUtils }:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> pkgs <span style="color:#f92672">=</span> nixpkgs<span style="color:#f92672">.</span>legacyPackages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>pkgs;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">in</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      packages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>hello <span style="color:#f92672">=</span> pkgs<span style="color:#f92672">.</span>hello;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      packages<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>default <span style="color:#f92672">=</span> pkgs<span style="color:#f92672">.</span>hello;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      devShells<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>default <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>        pkgs<span style="color:#f92672">.</span>mkShell { packages <span style="color:#f92672">=</span> <span style="color:#66d9ef">with</span> pkgs; [ hello nodejs-slim]; };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>As you can see, we&rsquo;ve added pkgs variable that is just deeper field in nixpkgs flake. Additionally we&rsquo;ve created new output: <code>devShells.x86_64-linux.default</code> that uses <em>mkShell</em> function provided by our newly created <code>pkgs</code> variable (we could use whole path here directly, but making <code>pkgs</code> variable makes it more readable and is pretty common practise).
+<em>mkShell</em> function takes object that can take have multiple fields but we&rsquo;re using just &lsquo;packages&rsquo; here. That&rsquo;s the place we specify our dependencies. You can find almost any open source software you might need at <a href="https://search.nixos.org">nix search page</a>. Are you using nodejs in your project? Type <code>nodejs</code> in search fields and check what packages does <code>nixpkgs</code> provide. You can then just copy the package name like <em>nodejs-slim</em> (if you want nodejs with less dependencies) into your project devshell like</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nix" data-lang="nix"><span style="display:flex;"><span>devShells<span style="color:#f92672">.</span>x86_64-linux<span style="color:#f92672">.</span>default <span style="color:#960050;background-color:#1e0010">=</span>
+</span></span><span style="display:flex;"><span>    pkgs<span style="color:#f92672">.</span>mkShell { packages <span style="color:#f92672">=</span> <span style="color:#66d9ef">with</span> pkgs; [ hello nodejs-slim]; };
+</span></span></code></pre></div><p>Now run <code>nix develop .</code> (&ldquo;nix can you run default devshell for me&rdquo;) and try <code>hello</code> and <code>nodejs</code> commands. Versions of software provided to you are pinned in flake.lock file so if someone copies your project he&rsquo;ll get the same <code>hello</code> and <code>nodejs</code> version.</p>
+<p>I think nix is great piece of technology. Sure it comes with another lanugage you need to understand and has steep learning curve, but in the beggining even just using simple flakes like the one I&rsquo;ve shown here is very useful and can greatly improve your productivity and developer experience. I hope you found this post useful. Have fun using nix and have a great day :-)</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer><div id="disqus_thread"></div>
+<script type="application/javascript">
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nxyt" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2023 <a href="https://nxy7.github.io/personal_blog">just some developer thoughts</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

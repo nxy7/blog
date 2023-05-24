@@ -1,0 +1,11 @@
+baseURL = 'https://nxyt.pl/blog'
+languageCode = 'pl-PL'
+title = 'just some developer thoughts'
+theme = 'PaperMod'
+googleAnalytics = 'G-D4BXHY930J'
+
+disqusShortname = 'nxyt'
+[params]
+  comments = true
+  name = 'Dawid Danieluk'
+  bio = 'I like learning about new technologies that can make my work easier.'

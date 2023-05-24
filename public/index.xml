@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>just some developer thoughts</title>
+    <link>https://nxy7.github.io/personal_blog/</link>
+    <description>Recent content on just some developer thoughts</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>pl-PL</language>
+    <lastBuildDate>Tue, 30 May 2023 09:03:20 -0800</lastBuildDate><atom:link href="https://nxy7.github.io/personal_blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Typescript is overhyped</title>
+      <link>https://nxy7.github.io/personal_blog/posts/typescript_is_overused/</link>
+      <pubDate>Tue, 30 May 2023 09:03:20 -0800</pubDate>
+      
+      <guid>https://nxy7.github.io/personal_blog/posts/typescript_is_overused/</guid>
+      <description>Every time you ask someone what his favourite programming language is, chances are they&amp;rsquo;ll respond &amp;ldquo;Typescript!&amp;rdquo;. I think most people just don&amp;rsquo;t have much contact with wide range of technologies and will usually pick language they use the most as their &amp;lsquo;favourite&amp;rsquo;. It&amp;rsquo;s even more obvious in case of Typescript which with all it&amp;rsquo;s flaws is infinitely better than javascript, so in comparion it seems like the best thing in the world.</description>
+    </item>
+    
+    <item>
+      <title>GraphQL vs REST, which one is better?</title>
+      <link>https://nxy7.github.io/personal_blog/posts/garphql_rest_comparison/</link>
+      <pubDate>Sat, 27 May 2023 09:03:20 -0800</pubDate>
+      
+      <guid>https://nxy7.github.io/personal_blog/posts/garphql_rest_comparison/</guid>
+      <description>As part of my bachelor thesis I&amp;rsquo;ve made some REST/GraphQL benchmarks that I&amp;rsquo;ve thought some of you might find interesting. Let&amp;rsquo;s start with short overview of both technologies.
+REST Probably the most popular way of making API services right now. REST stands for Representational state transfer and APIs that follow REST rules are called &amp;ldquo;RESTful&amp;rdquo; APIs. In REST resource that you want to operate on is defined by some URI like http://your.</description>
+    </item>
+    
+    <item>
+      <title>The Best Kubernetes Development Workflow</title>
+      <link>https://nxy7.github.io/personal_blog/posts/best-kubernetes-development-workflow/</link>
+      <pubDate>Sat, 13 May 2023 09:03:20 -0800</pubDate>
+      
+      <guid>https://nxy7.github.io/personal_blog/posts/best-kubernetes-development-workflow/</guid>
+      <description>At the start I want to point out that all opinions in this piece are just that - opinions. I&amp;rsquo;ve tried multiple workflows and all I want to do in this article is sharing what I&amp;rsquo;ve landed at and what difficulties I&amp;rsquo;ve had using other methods of developing in kubernetes. My main motivation for writing it is sparing someone difficutlies related with setting up dev environment. There are many solutions out there claiming that they make working with k8s easier, but with greater ease of development comes another layer of abstraction that sometimes might actually make things worse.</description>
+    </item>
+    
+    <item>
+      <title>Why I migrated from WSL2 and Windows to Linux</title>
+      <link>https://nxy7.github.io/personal_blog/posts/why_i_migrated_to_linux/</link>
+      <pubDate>Wed, 03 May 2023 09:03:20 -0800</pubDate>
+      
+      <guid>https://nxy7.github.io/personal_blog/posts/why_i_migrated_to_linux/</guid>
+      <description>Hello everyone, this time I&amp;rsquo;ll share why I stopped using Windows with WSL2 (Windows subsystem for Linux) as my development environment and instead opted for dual boot setup (I&amp;rsquo;m keeping Windows just for few games that don&amp;rsquo;t work very well with Linux).
+To make it more clear I should probably share my dev experience with WSL2 first.
+My dev environment journey I&amp;rsquo;ve started programming a few years ago (probably around 2017) with Windows as my primary system.</description>
+    </item>
+    
+    <item>
+      <title>How I&#39;ve reduced CI rust tests duration 4x with caching and Nix!</title>
+      <link>https://nxy7.github.io/personal_blog/posts/how-i-reduced-ci-rust-tests-duration-35-times-with-caching-and-nix/</link>
+      <pubDate>Thu, 20 Apr 2023 09:03:20 -0800</pubDate>
+      
+      <guid>https://nxy7.github.io/personal_blog/posts/how-i-reduced-ci-rust-tests-duration-35-times-with-caching-and-nix/</guid>
+      <description>One of my project consists of backend (rust) split into many services and frontend made with Svelte. Sooner rather than later I found out that rust builds that we&amp;rsquo;re rather quick locally took ages in CI, resulting in poor CI feedback experience and test times exceeding 15minutes. This post was made to help people struggling with simmilar issues.
+Project Structure The way I structure my projects will influence some of the futhurer solutions, so I thought it&amp;rsquo;s worthwhile sharing</description>
+    </item>
+    
+    <item>
+      <title>How to use Nix to make reproducible dev environments</title>
+      <link>https://nxy7.github.io/personal_blog/posts/using-nix-for-dev-environment/</link>
+      <pubDate>Fri, 17 Mar 2023 09:03:20 -0800</pubDate>
+      
+      <guid>https://nxy7.github.io/personal_blog/posts/using-nix-for-dev-environment/</guid>
+      <description>Perhaps just like me you see value in making easily reproducible dev environments. Wouldn&amp;rsquo;t it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necesarry for contributing?
+Well, I think it&amp;rsquo;s something that everone should take into consideration. Reproducible dev environments have one more pro - there&amp;rsquo;re self-documenting state of your project. You can look into things your dev env provides you to know which programming languages and tools the project is using.</description>
+    </item>
+    
+  </channel>
+</rss>
