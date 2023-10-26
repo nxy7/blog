@@ -8,27 +8,20 @@ Well, I think it&rsquo;s something that everone should take into consideration. 
 </span></span><span style=display:flex><span>  description <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;A very basic flake&#34;</span>;
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>  outputs <span style=color:#f92672>=</span> { self<span style=color:#f92672>,</span> nixpkgs }: {
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    packages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>hello <span style=color:#f92672>=</span> nixpkgs<span style=color:#f92672>.</span>legacyPackages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>hello;
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    packages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>default <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>packages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>hello;
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>  };
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>Default flake produced by <code>nix flake init</code> doesn&rsquo;t provide any developer shells and instead specifies packages that the project can build. In this case it&rsquo;s &lsquo;hello&rsquo; package from nixpkgs (the biggest repository for nix packages). You can try it out by either running <code>nix run .</code> (which will build and run <code>hello</code> package) or by running <code>nix build .</code> (that will only build hello binary and add &lsquo;result&rsquo; symlink in your project with binary in <code>result/bin/</code> folder).</p><p>Remember - flakes are declarative configuration of your project, so you need to know what options does flake.nix provide. As you can see at root level there&rsquo;s <code>description</code> and <code>outputs</code> properties. Description is pretty self explanatory, outputs on the other hand specify things your flake can do for you. Our current flake has output that takes 2 arguments <code>self</code> and <code>nixpkgs</code> and provides 2 outputs <code>packages.x86_64-linux.hello</code> and <code>packages.x86_64-linux.default</code>. When we&rsquo;re running <code>nix run .</code> we&rsquo;re telling nix: &ldquo;can you build and run default package for me?&rdquo;. You could also run specific output like <code>nix run .#hello</code>.</p><p>Now few words about arguments we provide to nix <code>outputs</code>. I&rsquo;m not here to teach you about Nix language and you&rsquo;d be better off using official resources for that, but I&rsquo;ll try explaining structure of it. <code>outputs</code> field is in reality a nix function that takes some arguments and returns structured object (like JSON). Some fields in returned object are <em>special</em> and have meaning to other nix commands. <code>nix run</code> and <code>nix build</code> are looking for &lsquo;packages.{system}.{outputName}&rsquo; propety of <code>outputs</code>. Default flake has just 2 dependencies: &ldquo;self&rdquo; and &ldquo;nixpkgs&rdquo;. Those 2 are special and provided to you by default. You could also provide <code>inputs</code> field at the root of flake file like:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  description <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;A very basic flake&#34;</span>;
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>  inputs <span style=color:#f92672>=</span> {
 </span></span><span style=display:flex><span>    nixpkgs<span style=color:#f92672>.</span>url <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;github:NixOS/nixpkgs/nixpkgs-unstable&#34;</span>;
 </span></span><span style=display:flex><span>    flakeUtils<span style=color:#f92672>.</span>url <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;github:numtide/flake-utils&#34;</span>;
 </span></span><span style=display:flex><span>  };
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>  outputs <span style=color:#f92672>=</span> { self<span style=color:#f92672>,</span> nixpkgs<span style=color:#f92672>,</span> flakeUtils }: {
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    packages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>hello <span style=color:#f92672>=</span> nixpkgs<span style=color:#f92672>.</span>legacyPackages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>hello;
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    packages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>default <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>packages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>hello;
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>  };
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>we&rsquo;ve provided 2 inputs for our flake here, one overrides nixpkgs, the other provides some useful Nix functions that we can use in our own flake. What those are really doing is just importing <code>flake.nix</code> files from other repositories, you can imagine how powerful is that concept. Let&rsquo;s modify flake.nix file so it can provide developer shell for us.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-nix data-lang=nix><span style=display:flex><span>{
@@ -42,11 +35,8 @@ Well, I think it&rsquo;s something that everone should take into consideration. 
 </span></span><span style=display:flex><span>  outputs <span style=color:#f92672>=</span> { self<span style=color:#f92672>,</span> nixpkgs<span style=color:#f92672>,</span> flakeUtils }:
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> pkgs <span style=color:#f92672>=</span> nixpkgs<span style=color:#f92672>.</span>legacyPackages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>pkgs;
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>in</span> {
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      packages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>hello <span style=color:#f92672>=</span> pkgs<span style=color:#f92672>.</span>hello;
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      packages<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>default <span style=color:#f92672>=</span> pkgs<span style=color:#f92672>.</span>hello;
-</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      devShells<span style=color:#f92672>.</span>x86_64-linux<span style=color:#f92672>.</span>default <span style=color:#f92672>=</span>
 </span></span><span style=display:flex><span>        pkgs<span style=color:#f92672>.</span>mkShell { packages <span style=color:#f92672>=</span> <span style=color:#66d9ef>with</span> pkgs; [ hello nodejs-slim]; };
 </span></span><span style=display:flex><span>
