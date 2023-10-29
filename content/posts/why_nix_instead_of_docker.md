@@ -19,16 +19,11 @@ and let me tell you - I don't regret it.
 
 ### Same dev and prod dependency versions
 
-Nix is ecosystem that greatly benefits from You using it in many places.
-If You're using Nix to manage project dependencies, then chances are that some of them will be required in final docker image. With Nix you can be sure that
-dependencies You're using locally are the same dependencies that will be contained within your final docker image.
+Nix is ecosystem that greatly benefits from You using it in many places. If You're using Nix to manage project dependencies, then chances are that some of them will be required in final docker image. With Nix you can be sure that dependencies You're using locally are the same dependencies that will be contained within your final docker image. 
 
 ### Smaller images
 
-With Nix it's also really easy to make sure You don't end up putting too much junk inside your images. That's the advantage of declarative configuration - we specify what
-is needed and nix takes care of it for us. This way imperative commands like `apt update` will not accidentally pollute our containers.
-It's not a guarantee however and depends on the 'quality' of packages you decide to include. Some packages may still include things that are not necesarry but it's much easier to
-track them down - just look into .nix source of pkgs you import. 
+With Nix it's also really easy to make sure You don't end up putting too much junk inside your images. That's the advantage of declarative configuration - we specify what is needed and nix takes care of it for us. This way imperative commands like `apt update` will not accidentally pollute our containers. It's not a guarantee however and depends on the 'quality' of packages you decide to include. Some packages may still include things that are not necessarry but it's much easier to track them down - just look into .nix source of pkgs you import. 
 
 ### Reuse container image creation logic
 
@@ -137,5 +132,10 @@ packaged for Nix as if it was already installed.
 Think about your docker container. What's it purpose? It isolates network and runtime dependencies from your system. That's what allows you to select which version
 of postgres you want to run easily. Even if they are used to make reproducible environments, it's not the best tool for the job - f.e. they lack version locking mechanism.
 It can be used for this task, because as I mentioned it isolates runtime dependencies, but it's side effect and not something baked into containers design.
-When we ship software we're really need both - reproducible envioroment that can satisfy our runtime needs and runtime isolated from the underlying system.
+When we ship software we really need both - reproducible environment that can satisfy our runtime needs and runtime isolated from the underlying system.
 Nix + Docker combination gives us both, which is why I think using Nix to build images is great idea.
+
+# What next
+
+Chances are You liked this short showcase of Nix, but still don't know how to use it Yourself. Nix learning curve is pretty hard after all. If you want to build images using Nix, but aren't very proficient in using the language I suggest the following learning path. First - package your software using Nix. In many cases it'll boil down to using appropriate builder (like buildRustPackage in examples above, but there are similar functions for other languages aswell), but sometimes it can be much harder, especially if Your project depends on software not available in nixpkgs.
+When your app is packaged correctly look into `dockerTools.buildImage` documentation. It's rather simple to use, but if You have any questions about it feel free to ask in the comments. I sincerely think that the best way to learn nix is by actively using it. No amount of reading helps as much as just porting some Dockerfiles to flake.nix files, so experiment and have fun :-) 
