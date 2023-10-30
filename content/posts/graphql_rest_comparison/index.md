@@ -14,7 +14,7 @@ GraphQL was developed by Facebook when they were creating their mobile app. It's
 - can always fetch all necesary data in just one request
 - has great tooling allowing for typed responses (less bugs)
 - is easier to reason about
-I'd like to spend some time on the last point. If you really think about it we really do thinkings about data in term of graphs is really natural and easy. `User` can have `Pet` that has `name` and `age`. It's easy to turn any data into tree of nodes and leaves. It's probably subjective but I've easier time making GraphQL services than REST ones. With GraphQL I don't need to think about the way my API is consumed, I just need to express all relations that node has and API consumer will pick stuff that he needs.
+I'd like to spend some time on the last point. If you really think about it, thinking about data in term of graphs is really natural and easy. `User` can have `Pet` that has `name` and `age`. It's easy to turn any data into tree of nodes and leaves. It's probably subjective but I've easier time making GraphQL services than REST ones. With GraphQL I don't need to think about the way my API is consumed, I just need to express all relations that node has and API consumer will pick stuff that he needs.
 
 # Benchmark
 The goal of this benchmark is comparing performance of both protocols in semi-real world scenario. We'll have two GraphQL servers, two REST servers, each kind of server has two implementations - naive and optimized. I've made two implementations as I've wanted to compare performance of thought out APIs and services that were quickly hacked together.
