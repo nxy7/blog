@@ -4,10 +4,10 @@ date: 2023-04-20T09:03:20-08:00
 draft: false
 ---
 
-One of my project consists of backend (rust) split into many services and frontend made with Svelte. Sooner rather than later I found out that rust builds that we're rather quick locally took ages in CI, resulting in poor CI feedback experience and test times exceeding 15minutes. This post was made to help people struggling with simmilar issues.
+One of my project consists of backend (rust) split into many services and frontend made with Svelte. Sooner rather than later I found out that rust builds that we're rather quick locally took ages in CI, resulting in poor CI feedback experience and test times exceeding 15 minutes. This post was made to help people struggling with similar issues.
 
 # Project Structure
-The way I structure my projects will influence some of the futhurer solutions, so I thought it's worthwhile sharing
+The way I structure my projects will influence some of the further solutions, so I thought it's worthwhile sharing
 ```yaml
     # in this case all backend services all written in rust
     backend:
@@ -24,7 +24,7 @@ The way I structure my projects will influence some of the futhurer solutions, s
 ```
 
 # Test script
-As I've mentioned above I'm running tests from scripts locally and invoking scripts files in CI. Here's how my current ci_tests.nu script file looks like. You  might not be fammiliar with nushell (it's a shell but also a scripting language) but I'm sure you can get the general idea.
+As I've mentioned above I'm running tests from scripts locally and invoking scripts files in CI. Here's how my current ci_tests.nu script file looks like. You might not be familiar with nushell (it's a shell but also a scripting language) but I'm sure you can get the general idea.
 
 ```nushell
 #!/usr/bin/env nu
@@ -131,9 +131,9 @@ There are two main techniques that I've used to reduce CI times.
 Arguably you can get away with just caching, but I think the two really go well together.
 
 ## Nix
-Nix describes itself as `tool that takes a unique approach to package management and system configuration.`. You don't need to use it as system configuration tool to get rewards from it's ecosystem. In short: nix allows you to specify your projects dependencies and let anyone run your project from any machine. Imagine you clone your project onto machine that doesn't have rust or nodejs installed. With nix you can specify your project dependencies in flake.nix file (there are other ways but nix seems to head toward using flakes) and run one command `nix develop . -c bash` to get shell with all dependencies ready to use. If that doesn't sound awsome to you I don't know what will.
+Nix describes itself as `tool that takes a unique approach to package management and system configuration.`. You don't need to use it as system configuration tool to get rewards from its ecosystem. In short: nix allows you to specify your projects dependencies and let anyone run your project from any machine. Imagine you clone your project onto machine that doesn't have rust or NodeJS installed. With Nix you can specify your project dependencies in flake.nix file (there are other ways, but nix seems to head toward using flakes) and run one command `nix develop . -c bash` to get shell with all dependencies ready to use. If that doesn't sound awesome to you, I don't know what will.
 
-Without getting into internals of nix, when you run command above nix will download ALL dependencies needed by your project into 'nix store', that we can later cache in CI. Thanks to that if your project relies on rust, your CI will download rust only once and reuse it in futhurer CI runs.
+Without getting into internals of nix, when you run command above nix will download ALL dependencies needed by your project into 'nix store', that we can later cache in CI. Thanks to that if your project relies on rust, your CI will download rust only once and reuse it in further CI runs.
 
 Here's how my flake.nix file looks like
 ```nix
@@ -166,7 +166,7 @@ Here's how my flake.nix file looks like
       });
 }
 ```
-There are many resources on nix flakes, but all You need to know for now is the fact that with this flake when i run `nix develop .#ci -c $SHELL` nix will make development shell for me looking for devShells.ci.packages list where all my dependencies are listed. I'm using $SHELL env variable as custom command, so I immiedietly start running my default shell - Nushell.
+There are many resources on nix flakes, but all You need to know for now is the fact that with this flake when i run `nix develop .#ci -c $SHELL` nix will make development shell for me looking for devShells.ci.packages list where all my dependencies are listed. I'm using $SHELL env variable as custom command, so I immediately start running my default shell - Nushell.
 
 As you can see my dev dependencies include: rustc, nushell, cargo, nodejs and pnpm. I list all dependencies that my scripts or services might need here so it can be built both locally and in CI.
 
@@ -186,7 +186,7 @@ Setting store inside /home/runner is actually pretty important here, if You don'
 
 ## Caching
 
-Github has actions that make caching very easy. I use *cache/restore* and *cache/save* actions to manage my cache. Here's my workflows/tests.yml file, I'll later explain parts related to caching.
+GitHub has actions that make caching very easy. I use *cache/restore* and *cache/save* actions to manage my cache. Here's my workflows/tests.yml file, I'll later explain parts related to caching.
 ```yml
 name: Tests
 on:
@@ -259,7 +259,7 @@ As You can see, actually running tests is the shortest part of the whole thing:
         run: |
           nix develop .#ci -c nu ./scripts/ci_tests.nu
 ```
-This line runs `nix develop .#ci` command, which brings developer dependencies from devshell named "ci" into scope and `-c nu ./scripts/ci_tests.nu` executes nushell script from the beggining of this post. I find it easier to hack around script file rather than executing bunch of "runs:" in workflow yaml  file.
+This line runs `nix develop .#ci` command, which brings developer dependencies from devshell named "ci" into scope and `-c nu ./scripts/ci_tests.nu` executes nushell script from the beginning of this post. I find it easier to hack around script file rather than executing a bunch of "runs:" in workflow yaml  file.
 
 Anyway let's see how we can reuse nix dependencies and rust build artifacts.
 ```yaml
@@ -284,14 +284,14 @@ Anyway let's see how we can reuse nix dependencies and rust build artifacts.
 ```
 I split caching into two steps because otherwise we wouldn't be able to reuse nix/cargo cache if the other one changes. Let's read caching step line by line.
 `name: Restore Nix Store` - Set step name displayed in CI
-`id: restore-nix-cache` - set step ID, it's usefull so we can reference outputs of the step later on
-`uses: actions/cache/restore@v3` - use actionts/cache/restore action
+`id: restore-nix-cache` - set step ID, it's useful so we can reference outputs of the step later on
+`uses: actions/cache/restore@v3` - use actions/cache/restore action
 `with:` - run action with the following parameters
 `path: |
 /home/runner/nix` - we want to load cache into /home/runner/nix folder that we specified as nix store folder when setting up nix in CI
-`key: ${{ runner.os }}-${{ hashFiles('./flake.nix', './flake.lock') }}` - every cache needs key associated with it. It's necesarry so Your CI knows which cache should it load. As all our project dependencies are listed in flake.nix i create my key as combinantion of runner system and hash of flake.nix+flake.lock. This way if I add dependency and drop it later on my flake.nix+flake.lock hash should be the same and I'll reuse older cache.
+`key: ${{ runner.os }}-${{ hashFiles('./flake.nix', './flake.lock') }}` - every cache needs key associated with it. It's necessary, so Your CI knows which cache should it load. As all our project dependencies are listed in flake.nix I create my key as combination of runner system and hash of flake.nix+flake.lock. This way if I add dependency and drop it later on my flake.nix+flake.lock hash should be the same, and I'll reuse older cache.
 
-Restoring cache for rust build artifact works the same, we just specify more paths and use different hash in "key" propety.
+Restoring cache for rust build artifact works the same, we just specify more paths and use different hash in "key" property.
 
 Now, when You run this workflow for the first time there obviously will be no cache to load, we need to take care of that. The following part of workflow takes care of it.
 ```yml
@@ -317,11 +317,11 @@ Now, when You run this workflow for the first time there obviously will be no ca
 ```
 Let's again break it into lines (but I'll skip steps explained earlier):
 `uses: actions/cache/save@v3` - this time we use cache/save action
-`if: ${{ steps.restore-nix-cache.outputs.cache-hit == false }}` - Save action first compresses cache and then tries to save it. Github CI caches are immutable, so if no dependencies changed and build artifacts are the same we'll produce the same hash, which results in the same cache key. This won't fly and CI will waste ~30sec on compressing caches that it cannot save. Because of this I'm checking if *cache/restore* found cache in earlier steps and if it did we're not saving any cache. If we change 'flake.nix', 'flake.lock', or 'cargo.lock' files, we'll produce different cache and we'll be able to save it.
+`if: ${{ steps.restore-nix-cache.outputs.cache-hit == false }}` - Save action first compresses cache and then tries to save it. GitHub CI caches are immutable, so if no dependencies changed and build artifacts are the same we'll produce the same hash, which results in the same cache key. This won't fly and CI will waste ~30sec on compressing caches that it cannot save. Because of this I'm checking if *cache/restore* found cache in earlier steps and if it did, we're not saving any cache. If we change 'flake.nix', 'flake.lock', or 'cargo.lock' files, we'll produce different cache, and we'll be able to save it.
 `path: | /home/runner/nix` - paths we want to save to cache
 
 ### Additional 'hacks'
-- I'm running tests in parallel using nushell built in par-each function
+- I'm running tests in parallel using nushell built-in par-each function
 - Rust tests are ran with cargo nextest, which supposedly is faster, but I didn't compare it to cargo test myself
 
 # Results

@@ -3,16 +3,16 @@ title: "Why You should be using Nix instead of Dockerfiles"
 date: 2023-10-26T13:03:20-08:00
 draft: false
 ---
-Lately I've had to move building and pushing docker images process to CI. To my suprise it wasn't as streightforward as it should be.
+Lately I've had to move building and pushing docker images process to CI. To my surprise it wasn't as straightforward as it should be.
 Building images on GitHub CI runner worked just fine, but my image registry had no SSL and adding 'insecure' registry to docker can be a pain.
 Sure - I could write script that changes docker `daemon.json` configuration and restarts it, but it felt like a hack. I've also tried using
 podman and buildah, but both of them didn't seem to get the job done in easy manner. 
 
 That's when I've decided to give Nix a try. I'm using Nix everywhere at this point - it handles my [PC configuration](https://github.com/nxy7/dotfiles),
-it handles my project dependencies and I'm sure it will be able to build my images!
+it handles my project dependencies, and I'm sure it will be able to build my images!
 
 In hindsight the easiest way to do it would be using Skopeo 
-(which I've actually ended up using in my nix solution) to push images built by docker, but issues mentioned above gave me a push to explore other possibilites
+(which I've actually ended up using in my nix solution) to push images built by docker, but issues mentioned above gave me a push to explore other possibilities
 and let me tell you - I don't regret it.
 
 # Why would I use Nix instead of Docker?!
@@ -23,7 +23,7 @@ Nix is ecosystem that greatly benefits from You using it in many places. If You'
 
 ### Smaller images
 
-With Nix it's also really easy to make sure You don't end up putting too much junk inside your images. That's the advantage of declarative configuration - we specify what is needed and nix takes care of it for us. This way imperative commands like `apt update` will not accidentally pollute our containers. It's not a guarantee however and depends on the 'quality' of packages you decide to include. Some packages may still include things that are not necessarry but it's much easier to track them down - just look into .nix source of pkgs you import. 
+With Nix it's also really easy to make sure You don't end up putting too much junk inside your images. That's the advantage of declarative configuration - we specify what is needed and nix takes care of it for us. This way imperative commands like `apt update` will not accidentally pollute our containers. It's not a guarantee however and depends on the 'quality' of packages you decide to include. Some packages may still include things that are not necessary, but it's much easier to track them down - just look into .nix source of pkgs you import. 
 
 ### Reuse container image creation logic
 
@@ -122,20 +122,20 @@ packages = {
 ``` 
 
 Now to build and push image we run `nix run .#serviceA`. As You can probably tell I'm actually using skopeo to push the final image and IMAO
-oneliner visible in pushImage function is great example of why Nix is so great. If I'd want to make shell script with equivalent functionality it would be
+one liner visible in pushImage function is great example of why Nix is so great. If I'd want to make shell script with equivalent functionality it would be
 necessary to make script that validates arguments given to it from CLI, then you'd need to make sure `skopeo` is installed (or worse - install it imperatively)
-and only then You'd be able to copy the image. Using Nix for this task it's trivial. There's no need do think about any of those things. You can just run anything
+and only then You'd be able to copy the image. Using Nix for this task it's trivial. There's no need to think about any of those things. You can just run anything
 packaged for Nix as if it was already installed.
 
 ### Nix is the best abstraction for building environments
 
 Think about your docker container. What's it purpose? It isolates network and runtime dependencies from your system. That's what allows you to select which version
-of postgres you want to run easily. Even if they are used to make reproducible environments, it's not the best tool for the job - f.e. they lack version locking mechanism.
+of postgres you want to run easily. Even if they are used to making reproducible environments, it's not the best tool for the job - f.e. they lack version locking mechanism.
 It can be used for this task, because as I mentioned it isolates runtime dependencies, but it's side effect and not something baked into containers design.
 When we ship software we really need both - reproducible environment that can satisfy our runtime needs and runtime isolated from the underlying system.
 Nix + Docker combination gives us both, which is why I think using Nix to build images is great idea.
 
 # What next
 
-Chances are You liked this short showcase of Nix, but still don't know how to use it Yourself. Nix learning curve is pretty hard after all. If you want to build images using Nix, but aren't very proficient in using the language I suggest the following learning path. First - package your software using Nix. In many cases it'll boil down to using appropriate builder (like buildRustPackage in examples above, but there are similar functions for other languages aswell), but sometimes it can be much harder, especially if Your project depends on software not available in nixpkgs.
+Chances are You liked this short showcase of Nix, but still don't know how to use it Yourself. Nix learning curve is pretty hard after all. If you want to build images using Nix, but aren't very proficient in using the language I suggest the following learning path. First - package your software using Nix. In many cases it'll boil down to using appropriate builder (like buildRustPackage in examples above, but there are similar functions for other languages as well), but sometimes it can be much harder, especially if Your project depends on software not available in nixpkgs.
 When your app is packaged correctly look into `dockerTools.buildImage` documentation. It's rather simple to use, but if You have any questions about it feel free to ask in the comments. I sincerely think that the best way to learn nix is by actively using it. No amount of reading helps as much as just porting some Dockerfiles to flake.nix files, so experiment and have fun :-) 
