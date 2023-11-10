@@ -166,7 +166,7 @@ Here's how my flake.nix file looks like
       });
 }
 ```
-There are many resources on nix flakes, but all You need to know for now is the fact that with this flake when i run `nix develop .#ci -c $SHELL` nix will make development shell for me looking for devShells.ci.packages list where all my dependencies are listed. I'm using $SHELL env variable as custom command, so I immediately start running my default shell - Nushell.
+There are many resources on nix flakes, but all You need to know for now is the fact that with this flake when I run `nix develop .#ci -c $SHELL` nix will make development shell for me looking for devShells.ci.packages list where all my dependencies are listed. I'm using $SHELL env variable as custom command, so I immediately start running my default shell - Nushell.
 
 As you can see my dev dependencies include: rustc, nushell, cargo, nodejs and pnpm. I list all dependencies that my scripts or services might need here so it can be built both locally and in CI.
 
