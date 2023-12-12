@@ -9,16 +9,16 @@
 <meta name="keywords" content="">
 <meta name="description" content="Posts - just some developer thoughts">
 <meta name="author" content="">
-<link rel="canonical" href="https://nxy7.github.io/personal_blog/posts/">
-<link crossorigin="anonymous" href="/personal_blog/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://nxy7.github.io/personal_blog/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://nxy7.github.io/personal_blog/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://nxy7.github.io/personal_blog/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://nxy7.github.io/personal_blog/apple-touch-icon.png">
-<link rel="mask-icon" href="https://nxy7.github.io/personal_blog/safari-pinned-tab.svg">
+<link rel="canonical" href="https://nxyt.pl/blog/posts/">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://nxyt.pl/blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://nxyt.pl/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nxyt.pl/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://nxyt.pl/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://nxyt.pl/blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="https://nxy7.github.io/personal_blog/posts/index.xml">
+<link rel="alternate" type="application/rss+xml" href="https://nxyt.pl/blog/posts/index.xml">
 <noscript>
     <style>
         #theme-toggle,
@@ -69,7 +69,7 @@ if (!doNotTrack) {
 <meta property="og:title" content="Posts" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://nxy7.github.io/personal_blog/posts/" />
+<meta property="og:url" content="https://nxyt.pl/blog/posts/" />
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Posts"/>
@@ -85,7 +85,7 @@ if (!doNotTrack) {
       "@type": "ListItem",
       "position":  2 ,
       "name": "Posts",
-      "item": "https://nxy7.github.io/personal_blog/posts/"
+      "item": "https://nxyt.pl/blog/posts/"
     }
   ]
 }
@@ -119,7 +119,7 @@ if (!doNotTrack) {
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://nxy7.github.io/personal_blog" accesskey="h" title="just some developer thoughts (Alt + H)">just some developer thoughts</a>
+            <a href="https://nxyt.pl/blog" accesskey="h" title="just some developer thoughts (Alt + H)">just some developer thoughts</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -156,14 +156,38 @@ if (!doNotTrack) {
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2>Perfect programming language
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Hello, as someone that likes to try out new things I’ve used plenty of programming languages, some popular, some niche and not widely known. This post sums up my experiences as wishlist of things I’d like my perfect language to have. This list is obviously subjective and there are some things that I might like, but you don’t - if that’s the case feel free to write comment with things you disagree with....</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-12-12 09:03:20 -0800 -0800'>December 12, 2023</span></footer>
+  <a class="entry-link" aria-label="post link to Perfect programming language" href="https://nxyt.pl/blog/posts/perfect_programming_language/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>Why You should be using Nix instead of Dockerfiles
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Lately I’ve had to move building and pushing docker images process to CI. To my surprise it wasn’t as straightforward as it should be. Building images on GitHub CI runner worked just fine, but my image registry had no SSL and adding ‘insecure’ registry to docker can be a pain. Sure - I could write script that changes docker daemon.json configuration and restarts it, but it felt like a hack. I’ve also tried using podman and buildah, but both of them didn’t seem to get the job done in easy manner....</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-10-26 13:03:20 -0800 -0800'>October 26, 2023</span></footer>
+  <a class="entry-link" aria-label="post link to Why You should be using Nix instead of Dockerfiles" href="https://nxyt.pl/blog/posts/why_nix_instead_of_docker/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2>Typescript is overhyped
     </h2>
   </header>
   <div class="entry-content">
-    <p>Every time you ask someone what his favourite programming language is, chances are they’ll respond “Typescript!”. I think most people just don’t have much contact with wide range of technologies and will usually pick language they use the most as their ‘favourite’. It’s even more obvious in case of Typescript which with all it’s flaws is infinitely better than javascript, so in comparion it seems like the best thing in the world....</p>
+    <p>Every time you ask someone what his favorite programming language is, chances are they’ll respond “Typescript!”. I think most people just don’t have much contact with wide range of technologies and will usually pick language they use the most as their ‘favorite’. It’s even more obvious in case of Typescript which with all its flaws is infinitely better than JavaScript, so in comparison it seems like the best thing in the world....</p>
   </div>
   <footer class="entry-footer"><span title='2023-05-30 09:03:20 -0800 -0800'>May 30, 2023</span></footer>
-  <a class="entry-link" aria-label="post link to Typescript is overhyped" href="https://nxy7.github.io/personal_blog/posts/typescript_is_overused/"></a>
+  <a class="entry-link" aria-label="post link to Typescript is overhyped" href="https://nxyt.pl/blog/posts/typescript_is_overused/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -176,7 +200,7 @@ if (!doNotTrack) {
 REST Probably the most popular way of making API services right now. REST stands for Representational state transfer and APIs that follow REST rules are called “RESTful” APIs. In REST resource that you want to operate on is defined by some URI like http://your....</p>
   </div>
   <footer class="entry-footer"><span title='2023-05-27 09:03:20 -0800 -0800'>May 27, 2023</span></footer>
-  <a class="entry-link" aria-label="post link to GraphQL vs REST, which one is better?" href="https://nxy7.github.io/personal_blog/posts/garphql_rest_comparison/"></a>
+  <a class="entry-link" aria-label="post link to GraphQL vs REST, which one is better?" href="https://nxyt.pl/blog/posts/graphql_rest_comparison/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -185,10 +209,10 @@ REST Probably the most popular way of making API services right now. REST stands
     </h2>
   </header>
   <div class="entry-content">
-    <p>At the start I want to point out that all opinions in this piece are just that - opinions. I’ve tried multiple workflows and all I want to do in this article is sharing what I’ve landed at and what difficulties I’ve had using other methods of developing in kubernetes. My main motivation for writing it is sparing someone difficutlies related with setting up dev environment. There are many solutions out there claiming that they make working with k8s easier, but with greater ease of development comes another layer of abstraction that sometimes might actually make things worse....</p>
+    <p>At the start I want to point out that all opinions in this piece are just that - opinions. I’ve tried multiple workflows and all I want to do in this article is sharing what I’ve landed at and what difficulties I’ve had using other methods of developing in Kubernetes. My main motivation for writing it is sparing someone difficulties related with setting up dev environment. There are many solutions out there claiming that they make working with k8s easier, but with greater ease of development comes another layer of abstraction that sometimes might actually make things worse....</p>
   </div>
   <footer class="entry-footer"><span title='2023-05-13 09:03:20 -0800 -0800'>May 13, 2023</span></footer>
-  <a class="entry-link" aria-label="post link to The Best Kubernetes Development Workflow" href="https://nxy7.github.io/personal_blog/posts/best-kubernetes-development-workflow/"></a>
+  <a class="entry-link" aria-label="post link to The Best Kubernetes Development Workflow" href="https://nxyt.pl/blog/posts/best-kubernetes-development-workflow/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -202,7 +226,7 @@ To make it more clear I should probably share my dev experience with WSL2 first.
 My dev environment journey I’ve started programming a few years ago (probably around 2017) with Windows as my primary system....</p>
   </div>
   <footer class="entry-footer"><span title='2023-05-03 09:03:20 -0800 -0800'>May 3, 2023</span></footer>
-  <a class="entry-link" aria-label="post link to Why I migrated from WSL2 and Windows to Linux" href="https://nxy7.github.io/personal_blog/posts/why_i_migrated_to_linux/"></a>
+  <a class="entry-link" aria-label="post link to Why I migrated from WSL2 and Windows to Linux" href="https://nxyt.pl/blog/posts/why_i_migrated_to_linux/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -211,11 +235,11 @@ My dev environment journey I’ve started programming a few years ago (probably 
     </h2>
   </header>
   <div class="entry-content">
-    <p>One of my project consists of backend (rust) split into many services and frontend made with Svelte. Sooner rather than later I found out that rust builds that we’re rather quick locally took ages in CI, resulting in poor CI feedback experience and test times exceeding 15minutes. This post was made to help people struggling with simmilar issues.
-Project Structure The way I structure my projects will influence some of the futhurer solutions, so I thought it’s worthwhile sharing...</p>
+    <p>One of my project consists of backend (rust) split into many services and frontend made with Svelte. Sooner rather than later I found out that rust builds that we’re rather quick locally took ages in CI, resulting in poor CI feedback experience and test times exceeding 15 minutes. This post was made to help people struggling with similar issues.
+Project Structure The way I structure my projects will influence some of the further solutions, so I thought it’s worthwhile sharing...</p>
   </div>
   <footer class="entry-footer"><span title='2023-04-20 09:03:20 -0800 -0800'>April 20, 2023</span></footer>
-  <a class="entry-link" aria-label="post link to How I&#39;ve reduced CI rust tests duration 4x with caching and Nix!" href="https://nxy7.github.io/personal_blog/posts/how-i-reduced-ci-rust-tests-duration-35-times-with-caching-and-nix/"></a>
+  <a class="entry-link" aria-label="post link to How I&#39;ve reduced CI rust tests duration 4x with caching and Nix!" href="https://nxyt.pl/blog/posts/how-i-reduced-ci-rust-tests-duration-35-times-with-caching-and-nix/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -224,16 +248,16 @@ Project Structure The way I structure my projects will influence some of the fut
     </h2>
   </header>
   <div class="entry-content">
-    <p>Perhaps just like me you see value in making easily reproducible dev environments. Wouldn’t it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necesarry for contributing?
-Well, I think it’s something that everone should take into consideration. Reproducible dev environments have one more pro - there’re self-documenting state of your project. You can look into things your dev env provides you to know which programming languages and tools the project is using....</p>
+    <p>Perhaps just like me, you see value in making easily reproducible dev environments. Wouldn’t it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necessary for contributing?
+Well, I think it’s something that everyone should take into consideration. Reproducible dev environments have one more pro - there are self-documenting state of your project. You can look into things your dev env provides you to know which programming languages and tools the project is using....</p>
   </div>
   <footer class="entry-footer"><span title='2023-03-17 09:03:20 -0800 -0800'>March 17, 2023</span></footer>
-  <a class="entry-link" aria-label="post link to How to use Nix to make reproducible dev environments" href="https://nxy7.github.io/personal_blog/posts/using-nix-for-dev-environment/"></a>
+  <a class="entry-link" aria-label="post link to How to use Nix to make reproducible dev environments" href="https://nxyt.pl/blog/posts/using-nix-for-dev-environment/"></a>
 </article>
     </main>
     
 <footer class="footer">
-    <span>&copy; 2023 <a href="https://nxy7.github.io/personal_blog">just some developer thoughts</a></span>
+    <span>&copy; 2023 <a href="https://nxyt.pl/blog">just some developer thoughts</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
