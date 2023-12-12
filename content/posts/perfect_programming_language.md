@@ -5,7 +5,7 @@ draft: false
 ---
 Hello, as someone that likes to try out new things I've used plenty of programming languages, some popular, some niche and not widely known.
 This post sums up my experiences as wishlist of things I'd like my perfect language to have. This list is obviously subjective and there are some things that I might like, but you don't - if that's the case feel free to write comment with things you disagree with.
-One last small disclaimer - I'll be writing about my 'perfect general purpose programming language', even given this list there are some applications where I'd be happy to give up on many things from this list - shell languages come to mind as one example that doesn't need many of features I'll list and instead they should allow you to quickly and conveniently interact with system. 
+One last small disclaimer - I'll be writing about my 'perfect general purpose programming language', there are some applications where I'd be happy to give up on many things from this list - shell languages come to mind as one example that doesn't need many of features I'll list and instead they should allow you to quickly and conveniently interact with system. 
 
 # Static typing
 
@@ -140,7 +140,6 @@ pub fn main() void {
 }
 ```
 If you run this program `comptime add(1,3)` will be swapped for raw value `4`, the same will happen with `len_2`. It can be really handy to calculate some values during compilation instead of calculating them on each program execution. 
-
 
 # Package manager
 
