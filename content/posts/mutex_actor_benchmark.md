@@ -4,7 +4,7 @@ date: 2024-01-30
 draft: false
 ---
 Hello, this post is quick summary of my findings when I was benchmarking Actor model vs Mutex for concurrent access to value in async environment.
-All code for this benchmark is available in (my github repo)[https://github.com/nxy7/rs-actor-mutex-benchmark], but I've decided to copy some parts of
+All code for this benchmark is available in [my github repo](https://github.com/nxy7/rs-actor-mutex-benchmark), but I've decided to copy some parts of
 implementation here.
 
 # Actor implementation
