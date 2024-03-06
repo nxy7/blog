@@ -22,4 +22,5 @@ res := big.NewInt(10).Add(big.NewInt(20)).Exp(2, nil)
 ```
 This would read left to right in the order that the operations are executed. I'm sure there are good reasons why big math packages are doing the things their doing, but to be honest - it doesn't make for a nice user experience.
 
-
+# Summary
+Because Golang doesn't really like to create new abstractions I think it doesn't work with cryptocurrency space that well - Golang just makes it difficult to hide all that abstraction behind nice interface. Additionally, math associated with crypto space (and there's lots of it) could really use some operator overloading. I know the reasoning behind not providing them, but personally I think they would be great addition to the language. All in all I'd rate my experience 4/7 - "can do again but would pick something else if I had a choice". 
