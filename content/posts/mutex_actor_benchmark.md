@@ -1,6 +1,6 @@
 ---
 title: "Rust - Mutex vs Actor benchmark"
-date: 2024-01-30T09
+date: 2024-01-30
 draft: false
 ---
 Hello, this post is quick summary of my findings when I was benchmarking Actor model vs Mutex for concurrent access to value in async environment.
