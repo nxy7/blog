@@ -30,6 +30,77 @@ Because of this despite lower performance Tokio mutexes are good default in asyn
 I'm reusing the same benchmark that I've created to test Tokio mutex vs Actor model. Essentially I've struct with some value and 100_000 concurrent async futures try
 to modify this value. One implementation is using Std mutex and one is using Tokio mutex. What we're effectively measuring here is overhead of tokio mutexes in environment where there's no other work in the background.
 
+## Code
+Here's simplified code we'll be benchmarking
+```rs
+#[derive(Default)]
+pub struct BenchStruct {
+    /// in reality there are two variants of BenchStruct one with std mutex one with tokio mutex
+    count: Mutex<i64>,
+}
+...
+/// and we have two sets of methods one for std mutex and one for tokio mutex 
+
+/// tokio mutex
+pub async fn increase_by(&self, i: i64) {
+  (*self.count.lock().await) += i;
+}
+/// std mutex
+pub async fn increase_by(&self, i: i64) {
+    *self.count.lock().unwrap() += i;
+}
+```
+
+And here is benchmarking code
+```rs
+fn benchmark_mutexes(c: &mut Criterion) {
+    let mut group = c.benchmark_group("std mutex vs tokio mutex");
+
+    group.bench_function("tokio mutex", |b| {
+        b.to_async(Runtime::new().unwrap()).iter(|| async {
+            let mutex = Arc::new(BenchMutex::default());
+
+            let bench_tasks = iter_range
+                .map(|_| {
+                    let m_copy = mutex.clone();
+                    async move {
+                        m_copy.increase_by(2).await;
+                        m_copy.decrease_by(0).await;
+                    }
+                })
+                .collect::<Vec<_>>();
+
+            join_all(bench_tasks).await;
+
+            assert_eq!(mutex.get().await, REACHED_COUNT_SIGNAL_AMOUNT);
+        });
+    });
+
+    group.bench_function("std mutex", |b| {
+        b.to_async(Runtime::new().unwrap()).iter(|| async {
+            let mutex = Arc::new(BenchStdMutex::default());
+
+            let bench_tasks = iter_range
+                .map(|_| {
+                    let m_copy = mutex.clone();
+                    async move {
+                        m_copy.increase_by(2).await;
+                        m_copy.decrease_by(0).await;
+                    }
+                })
+                .collect::<Vec<_>>();
+
+            join_all(bench_tasks).await;
+
+            assert_eq!(mutex.get().await, REACHED_COUNT_SIGNAL_AMOUNT);
+        });
+    });
+
+    group.finish();
+}
+```
+iter_range is set to 100_000 so we're making 100_000 concurrent futures each trying  to access the lock twice.
+
 ## Results 
 ```
 std mutex vs tokio mutex/tokio mutex
