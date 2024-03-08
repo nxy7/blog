@@ -27,7 +27,7 @@ that one service locking mutex is introducing latency to unrelated service. Typi
 Because of this despite lower performance Tokio mutexes are good default in async environments as they tend to scale with async software complexity a little bit better.
 
 # Benchmark
-I'm reusing the same benchmark that I've created to test Tokio mutex vs Actor model. Essentially I've struct with some value and 100_000 concurrent async futures try
+I'm reusing the [same benchmark](https://github.com/nxy7/rs-actor-mutex-benchmark) that I've created to test Tokio mutex vs Actor model. Essentially I've struct with some value and 100_000 concurrent async futures try
 to modify this value. One implementation is using Std mutex and one is using Tokio mutex. What we're effectively measuring here is overhead of tokio mutexes in environment where there's no other work in the background.
 
 ## Code
