@@ -2,6 +2,7 @@
 title: "I will make you love Nix in 5 lines of code!!"
 date: 2023-12-06T09:03:20-08:00
 draft: true
+tags: ['nix']
 ---
 I'm not kidding. 5 lines of code (with some interactive input in between) and you'll appreciate what this crafty tool can do. If you haven't heard of Nix yet - it's package manager built with declarative management in mind. It allows reproducing systems of any size with just one command and if you've ever thought that managing conflicting versions of programs in dev environment isn't something that we should be doing in 2023, then chances are you'll like this short presentation.
 

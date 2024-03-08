@@ -2,6 +2,7 @@
 title: "How to use Nix to make reproducible dev environments"
 date: 2023-03-17T09:03:20-08:00
 draft: false
+tags: ['nix']
 ---
 Perhaps just like me, you see value in making easily reproducible dev environments. Wouldn't it be great if you could have projects with different versions of dependencies that anyone could just jump right into, type command or two and have everything necessary for contributing?
 

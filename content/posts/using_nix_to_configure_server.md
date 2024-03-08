@@ -2,6 +2,7 @@
 title: "Using Nix to configure remote server"
 date: 2023-05-13T09:03:20-08:00
 draft: true
+tags: ['nix']
 ---
 Hello, today I thought I'd share some practical examples of how nix can be used to manage remote servers.
 

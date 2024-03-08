@@ -2,6 +2,7 @@
 title: "One Year with NixOS"
 date: 2023-05-27T09:03:20-08:00
 draft: true
+tags: ['nix']
 ---
 In this article I'll share with you pros and cons of NixOS system after using it for about a year. First things first - my NixOS configuration is publicly available at my [github](https://github.com/nxy7/dotfiles), feel free to lurk around and see how I'm configuring my system. If you think that my configuration could be improved, don't hesitate and leave comment. I'd like this repository to be something that others can use to bootstrap their configurations :-)
 

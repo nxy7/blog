@@ -2,6 +2,7 @@
 title: "Golang vs Rust"
 date: 2023-12-20
 draft: false
+tags: ['rust', 'golang']
 ---
 
 Yes, it's another one of those 😈 My programming journey started few years ago with typescript (unsurprisingly), but sooner rather than later I've developed a view that typescript doesn't have any advantages on the backend. Seriously, does typescript have any advantages over alternatives in this space? It's interpreted, so we need to package runtime with our code to get it to work, even if it doesn't have benefits of compiled languages we need compile step, it doesn't have good native tooling (you need 3rd party projects for things like formatting), it's not very safe language (f.e. it doesn't protect you against accessing out of bounds index), it doesn't encourage good error handling (you don't even know which functions can throw errors) and so on. The only benefits I see TS have are big ecosystem, frontend <-> backend code sharing and many people already know TS so it's easy to hire for. If you ask me, the only worthwhile thing here is sharing code between your services, but this can also be done across languages (in my projects I'm often depending heavily on sharing types between Rust and TS).
